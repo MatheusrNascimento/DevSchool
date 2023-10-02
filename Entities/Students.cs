@@ -3,12 +3,9 @@
 public class Students
 {
 
-    public Students(string fullName, DateTime birthDate, string schoolClass, bool isActive)
+    public Students()
     {
-        FullName = fullName;
-        BirthDate = birthDate;
-        SchoolClass = schoolClass;
-        IsActive = isActive;
+        
     }
     
     public int StudentId { get; private set; }

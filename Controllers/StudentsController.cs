@@ -39,7 +39,7 @@ namespace DevSchool.Controllers
             };
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                const string sqlCommand = "SELECT *FROM Studests WHERE id = @id";
+                const string sqlCommand = "SELECT *FROM Students WHERE StudentId = @id";
                 var student = await sqlConnection.QuerySingleOrDefaultAsync<Students>(sqlCommand, parameters);
 
                 if (student is null)
