@@ -14,7 +14,22 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="Entities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Transactions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Transactions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Transactions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Transactions\**" />
   </ItemGroup>
 
 </Project>
