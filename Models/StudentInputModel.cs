@@ -1,20 +1,19 @@
-﻿namespace DevSchool.Entities;
+﻿namespace DevSchool.Models;
 
-public class Students
+public class StudentInputModel
 {
-    public Students()
+    public StudentInputModel()
     {
-        
     }
-    public Students(string fullName, DateTime birthDate, string schoolClass, bool isActive)
+
+    public StudentInputModel(string fullName, DateTime birthDate, string schoolClass, bool isActive)
     {
         FullName = fullName;
         BirthDate = birthDate;
         SchoolClass = schoolClass;
         IsActive = isActive;
     }
-    
-    public int StudentId { get; private set; }
+
     public string FullName { get; private set; }
     public DateTime BirthDate { get; private set; }
     public string SchoolClass { get; private set; }

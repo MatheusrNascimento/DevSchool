@@ -1,12 +1,13 @@
 using System.Data.SqlClient;
 using Dapper;
 using DevSchool.Entities;
+using DevSchool.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSchool.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class StudentsController : ControllerBase
     {
         private readonly string _connectionString;
@@ -14,7 +15,6 @@ namespace DevSchool.Controllers
         public StudentsController(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DevSchool");
-            
         }
 
         [HttpGet]
@@ -50,9 +50,66 @@ namespace DevSchool.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(StudentInputModel model)
         {
-            return NoContent();
+            var student = new Students(model.FullName, model.BirthDate, model.SchoolClass, model.IsActive);
+
+            var parameters = new
+            {
+                student.FullName,
+                student.BirthDate,
+                student.SchoolClass,
+                student.IsActive
+            };
+            
+            await using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                const string sqlCommand = "INSERT INTO Students ([FullName], [BirthDate], [SchoolClass], [IsActive])" +
+                                          "VALUES (@FullName, @BirthDate, @SchoolClass, @IsActive)";
+                int id = await sqlConnection.ExecuteScalarAsync<int>(sqlCommand, parameters);
+
+                return Ok(id);
+            }
+        }
+    
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, StudentInputModel model)
+        {
+            var parameters = new
+            {
+                model.FullName,
+                model.BirthDate,
+                model.SchoolClass,
+                model.IsActive
+            };
+            await using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                const string sqlCommand =
+                    "UPDATE Students SET [FullName] = @FullName, [BirthDate] = @BirthDate, [SchoolClass] = @SchoolClass, [IsActive] = @IsActive WHERE StudentId = @Id";
+                await sqlConnection.ExecuteAsync(sqlCommand, parameters);
+                
+            }
+
+            return Ok();
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var parameters = new
+            { 
+                id
+            };
+            
+            await using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                const string sqlCommand =
+                    "UPDATE Students SET [IsActive] = 0 WHERE StudentId = @Id";
+                await sqlConnection.ExecuteAsync(sqlCommand, parameters);
+                
+            }
+
+            return Ok();
         }
     }
 }
